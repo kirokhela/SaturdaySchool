@@ -9,27 +9,42 @@ const sql = neon(process.env.DATABASE_URL!);
 // =======================
 
 export type User = { id: number; name: string; password: string; role: string };
+export type UserSummary = { id: number; name: string; role: string };
 
 export async function loginAction(
   name: string,
   password: string
 ): Promise<User | null> {
-  const users = (await sql`
+  const result = await sql`
     SELECT id, name, password, role
     FROM users
     WHERE name = ${name} AND password = ${password}
     LIMIT 1
-  `) as User[];
+  `;
+
+  const users = result.map((row: any) => ({
+    id: Number(row.id),
+    name: String(row.name),
+    password: String(row.password),
+    role: String(row.role),
+  })) as User[];
+
   return users[0] ?? null;
 }
 
-export async function getUsers() {
-  return (await sql`
+export async function getUsers(): Promise<UserSummary[]> {
+  const result = await sql`
     SELECT id, name, role
     FROM users
     ORDER BY id ASC
-  `) as User[];
-}
+  `;
+
+  return result.map((row: any) => ({
+    id: Number(row.id),
+    name: String(row.name),
+    role: String(row.role),
+  })) as UserSummary[];
+} 
 
 export async function createUser(formData: FormData) {
   const name = formData.get('name') as string;
@@ -209,7 +224,7 @@ export async function createAttendance(formData: FormData) {
   const school_day_id = Number(formData.get('school_day_id'));
   const attended = formData.get('attended') === 'true';
   const time = formData.get('time') as string;
-  const user_id = formData.get('user_id') ? Number(formData.get('user_id')) : "1";
+  const user_id = formData.get('user_id') ? Number(formData.get('user_id')) : 1;
 
   await sql`
     INSERT INTO attendance (student_id, school_day_id, attended, time, user_id)
@@ -223,7 +238,7 @@ export async function updateAttendance(attendance_id: number, formData: FormData
   const attended = formData.get('attended') === 'true';
   const time = formData.get('time') as string;
 
-  const user_id = formData.get('user_id') ? Number(formData.get('user_id')) : "1";
+  const user_id = formData.get('user_id') ? Number(formData.get('user_id')) : 1;
 
   await sql`
     UPDATE attendance

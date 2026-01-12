@@ -2,13 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import type { UserSummary as User } from '../actions';
 import { createUser, deleteUser, getUsers } from '../actions';
-
-type User = {
-  id: number;
-  name: string;
-  role: string;
-};
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);

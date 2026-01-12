@@ -13,9 +13,6 @@ import {
 } from '../actions';
 
 
-const user = JSON.parse(localStorage.getItem('user') || '{}');
-const userId = user.id;
-
 export default function AttendancePage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
@@ -25,6 +22,17 @@ export default function AttendancePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [formStudent, setFormStudent] = useState<{ student_id: number }>({ student_id: 0 });
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Read user id from localStorage only on the client
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || '{}');
+      setUserId(u?.id ?? null);
+    } catch (err) {
+      setUserId(null);
+    }
+  }, []);
 const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleDateString('ar-EG');
 };
@@ -98,7 +106,7 @@ const formatDate = (date: Date | string) => {
     formData.append('school_day_id', selectedDate.toString());
     formData.append('attended', 'true');
     formData.append('time', time);
-    formData.append('user_id', userId.toString());
+    formData.append('user_id', (userId ?? 1).toString());
     if (editingId) {
       await updateAttendance(editingId, formData);
     } else {
