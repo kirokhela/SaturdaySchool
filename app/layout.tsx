@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import bgImage from '../public/bg.jpg';
 import './globals.css';
+import Link from 'next/link';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -62,13 +63,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <nav className="flex flex-col gap-2">
                 {links.map((link) => (
-                  <a
+                  <Link
                     key={link.href}
                     href={link.href}
                     className="py-2 px-3 rounded text-white hover:bg-white/10 transition"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 ))}
               </nav>
               <div className="mt-auto">
@@ -121,14 +122,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
                   <nav className="flex flex-col gap-3 flex-1">
                     {links.map((link) => (
-                      <a
+                      <Link
                         key={link.href}
                         href={link.href}
                         onClick={() => setSidebarOpen(false)}
                         className="py-2 px-3 rounded text-white hover:bg-white/10 transition"
                       >
                         {link.label}
-                      </a>
+                      </Link>
                     ))}
                   </nav>
 

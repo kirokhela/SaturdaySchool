@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -13,9 +14,9 @@ export default function Button({ variant = 'primary', href, className = '', chil
 
   if (href) {
     return (
-      <a href={href} className={`${base} ${variantClass} ${className}`} {...(props as any)}>
+      <Link href={href as string} className={`${base} ${variantClass} ${className}`} {...(props as any)}>
         {children}
-      </a>
+      </Link>
     );
   }
 
